@@ -1,11 +1,9 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
+'use strict';
+
 class Consumer {
   constructor() {
-    console.error('Consumer Not Implemented');
-    false;
+    throw new Error('Consumer Not Implemented');
   }
 }
 
-
-const exports = (module.exports = Consumer);
+module.exports = Consumer;

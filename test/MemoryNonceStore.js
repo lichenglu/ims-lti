@@ -1,19 +1,10 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
-const MemoryNonceStore  = require('../lib/memory-nonce-store');
-const should            = require('should');
-const shared            = require('./shared');
+'use strict';
 
+require('should');
 
-describe('MemoryNonceStore', () =>
+const MemoryNonceStore = require('../src/memory-nonce-store');
+const shared = require('./shared');
 
-  shared.shouldBehaveLikeNonce(() => {
-    return new MemoryNonceStore();
-  })
-);
-
+describe('MemoryNonceStore', function() {
+  shared.shouldBehaveLikeNonce(() => new MemoryNonceStore());
+});

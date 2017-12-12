@@ -1,18 +1,12 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
-const should = require('should');
+'use strict';
 
-const HMAC_SHA1 = require('../lib/hmac-sha1');
+require('should');
+
+const HMAC_SHA1 = require('../src/hmac-sha1');
 
 describe('Signer', function() {
-
   it('should include query params', function(done) {
-    const signer = new HMAC_SHA1;
+    const signer = new HMAC_SHA1();
     const req = {
       url: '/developers/LTI/test/v1p1/tool.php?foo=123&foo=bar',
       method: 'POST',
@@ -26,9 +20,11 @@ describe('Signer', function() {
     const body = {
       resource_link_id: 'rsc1',
       oauth_callback: 'about:blank',
-      lis_outcome_service_url: 'http://www.imsglobal.org/developers/LTI/test/v1p1/common/tool_consumer_outcome.php?b64=MTIzNDU6OjpzZWNyZXQ=',
+      lis_outcome_service_url:
+        'http://www.imsglobal.org/developers/LTI/test/v1p1/common/tool_consumer_outcome.php?b64=MTIzNDU6OjpzZWNyZXQ=',
       lis_result_sourcedid: 'feb-123-456-2929::28883',
-      launch_presentation_return_url: 'http://www.imsglobal.org/developers/LTI/test/v1p1/lms_return.php',
+      launch_presentation_return_url:
+        'http://www.imsglobal.org/developers/LTI/test/v1p1/lms_return.php',
       lti_version: 'LTI-1p0',
       lti_message_type: 'basic-lti-launch-request',
       oauth_version: '1.0',
@@ -40,9 +36,10 @@ describe('Signer', function() {
     };
 
     const signature = signer.build_signature(req, body, 'secret');
+
     signature.should.equal(body.oauth_signature);
 
-    return done();
+    done();
   });
 
   return it('should support x-forwarded-*', function(done) {
@@ -62,9 +59,11 @@ describe('Signer', function() {
     const body = {
       resource_link_id: 'rsc1',
       oauth_callback: 'about:blank',
-      lis_outcome_service_url: 'http://www.imsglobal.org/developers/LTI/test/v1p1/common/tool_consumer_outcome.php?b64=MTIzNDU6OjpzZWNyZXQ=',
+      lis_outcome_service_url:
+        'http://www.imsglobal.org/developers/LTI/test/v1p1/common/tool_consumer_outcome.php?b64=MTIzNDU6OjpzZWNyZXQ=',
       lis_result_sourcedid: 'feb-123-456-2929::28883',
-      launch_presentation_return_url: 'http://www.imsglobal.org/developers/LTI/test/v1p1/lms_return.php',
+      launch_presentation_return_url:
+        'http://www.imsglobal.org/developers/LTI/test/v1p1/lms_return.php',
       lti_version: 'LTI-1p0',
       lti_message_type: 'basic-lti-launch-request',
       oauth_version: '1.0',
@@ -76,9 +75,9 @@ describe('Signer', function() {
     };
 
     const signature = signer.build_signature(req, body, 'secret');
+
     signature.should.equal(body.oauth_signature);
 
-    return done();
+    done();
   });
 });
-

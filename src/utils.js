@@ -1,14 +1,16 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+'use strict';
+
+/**
+ * Special encode is our encoding method that implements the encoding of
+ * characters not defaulted by encodeURI.
+ *
+ * Specifically ' and !
+ *
+ * @param {string} string String to encode
+ * @returns {string}
  */
-// Special encode is our encoding method that implements
-//  the encoding of characters not defaulted by encodeURI
-//
-//  Specifically ' and !
-//
-// Returns the encoded string
-exports.special_encode = string => encodeURIComponent(string).replace(/[!'()]/g, escape).replace(/\*/g, '%2A');
+exports.special_encode = function(string) {
+  return encodeURIComponent(string)
+    .replace(/[!'()]/g, escape)
+    .replace(/\*/g, '%2A');
+};

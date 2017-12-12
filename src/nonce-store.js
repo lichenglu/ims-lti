@@ -1,28 +1,27 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
-class NonceStore {
+'use strict';
 
+const noop = () => undefined;
+
+class NonceStore {
+  /**
+   * @todo removed bound methods
+   */
   constructor() {
     this.isNew = this.isNew.bind(this);
     this.setUsed = this.setUsed.bind(this);
   }
 
-  isNonceStore() { return true; }
-
-  isNew(){
-    for (let i in arguments) {
-      const arg = arguments[i];
-      if (typeof arg === 'function') { return arg(new Error("NOT IMPLEMENTED"), false); }
-    }
+  isNonceStore() {
+    return true;
   }
 
-  setUsed(){
-    for (let i in arguments) {
-      const arg = arguments[i];
-      if (typeof arg === 'function') { return arg(new Error("NOT IMPLEMENTED"), false); }
-    }
+  isNew(nonce, timestamp, next = noop) {
+    next(new Error('NOT IMPLEMENTED'), false);
+  }
+
+  setUsed(nonce, timestamp, next = noop) {
+    next(new Error('NOT IMPLEMENTED'));
   }
 }
 
-
-const exports = (module.exports = NonceStore);
+module.exports = NonceStore;
