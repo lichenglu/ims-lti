@@ -1,32 +1,48 @@
-lti       = require '../'
-should    = require 'should'
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+const lti       = require('../');
+const should    = require('should');
 
 
-describe 'LTI', () ->
+describe('LTI', function() {
 
-  before ()=>
-    @lti = lti
+  before(()=> {
+    return this.lti = lti;
+  });
 
-  describe '.Provider', () =>
-    it 'should exist', () =>
-      should.exist(@lti.Provider)
+  describe('.Provider', () => {
+    it('should exist', () => {
+      return should.exist(this.lti.Provider);
+    });
 
-    it 'should be an instance of Provider', () =>
-      @lti.Provider.should.be.an.instanceOf Object
-      @lti.Provider.should.equal require ('../lib/provider')
+    return it('should be an instance of Provider', () => {
+      this.lti.Provider.should.be.an.instanceOf(Object);
+      return this.lti.Provider.should.equal(require(('../lib/provider')));
+    });
+  });
 
 
-  describe '.Consumer', () =>
-    it 'should exist', () =>
-      should.exist(@lti.Consumer)
+  describe('.Consumer', () => {
+    it('should exist', () => {
+      return should.exist(this.lti.Consumer);
+    });
 
-    it 'should be an instance of Consumer', () =>
-      @lti.Consumer.should.be.an.instanceOf Object
-      @lti.Consumer.should.equal require ('../lib/consumer')
+    return it('should be an instance of Consumer', () => {
+      this.lti.Consumer.should.be.an.instanceOf(Object);
+      return this.lti.Consumer.should.equal(require(('../lib/consumer')));
+    });
+  });
 
-  describe '.Stores', () =>
-    it 'should not be empty', () =>
-      should.exist(@lti.Stores)
-    it 'should include NonceStore', () =>
-      should.exist(@lti.Stores.NonceStore)
+  return describe('.Stores', () => {
+    it('should not be empty', () => {
+      return should.exist(this.lti.Stores);
+    });
+    return it('should include NonceStore', () => {
+      return should.exist(this.lti.Stores.NonceStore);
+    });
+  });
+});
 

@@ -1,7 +1,9 @@
-class Consumer
-  constructor: () ->
-    console.error('Consumer Not Implemented')
-    false
+class Consumer {
+  constructor() {
+    console.error('Consumer Not Implemented');
+    false;
+  }
+}
 
 
-exports = module.exports = Consumer
+const exports = (module.exports = Consumer);

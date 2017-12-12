@@ -1,98 +1,121 @@
-crypto    = require 'crypto'
-url       = require 'url'
-utils     = require './utils'
+/*
+ * decaffeinate suggestions:
+ * DS101: Remove unnecessary use of Array.from
+ * DS102: Remove unnecessary code created because of implicit returns
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+const crypto    = require('crypto');
+const url       = require('url');
+const utils     = require('./utils');
 
 
-# Cleaning invloves:
-#   stripping the oauth_signature from the params
-#   encoding the values ( yes this double encodes them )
-#   sorting the key/value pairs
-#   joining them with &
-#   encoding them again
-#
-# Returns a string representing the request
-_clean_request_body = (body, query) ->
+// Cleaning invloves:
+//   stripping the oauth_signature from the params
+//   encoding the values ( yes this double encodes them )
+//   sorting the key/value pairs
+//   joining them with &
+//   encoding them again
+//
+// Returns a string representing the request
+const _clean_request_body = function(body, query) {
 
-  out = []
+  const out = [];
 
-  encodeParam = (key, val) ->
-    return "#{key}=#{utils.special_encode(val)}"
+  const encodeParam = (key, val) => `${key}=${utils.special_encode(val)}`;
 
-  cleanParams = (params) ->
-    return if typeof params isnt 'object'
+  const cleanParams = function(params) {
+    if (typeof params !== 'object') { return; }
 
-    for key, vals of params
-      continue if key is 'oauth_signature'
-      if Array.isArray(vals) is true
-        for val in vals
-          out.push encodeParam key, val
-      else
-        out.push encodeParam key, vals
+    for (let key in params) {
+      const vals = params[key];
+      if (key === 'oauth_signature') { continue; }
+      if (Array.isArray(vals) === true) {
+        for (let val of Array.from(vals)) {
+          out.push(encodeParam(key, val));
+        }
+      } else {
+        out.push(encodeParam(key, vals));
+      }
+    }
 
-    return
+  };
 
-  cleanParams body
-  cleanParams query
+  cleanParams(body);
+  cleanParams(query);
 
-  utils.special_encode out.sort().join('&')
+  return utils.special_encode(out.sort().join('&'));
+};
 
 
 
-class HMAC_SHA1
+class HMAC_SHA1 {
 
-  constructor: (options) ->
-    @trustProxy = (options and options.trustProxy) or false
+  constructor(options) {
+    this.trustProxy = (options && options.trustProxy) || false;
+  }
 
-  toString: () ->
-    'HMAC_SHA1'
+  toString() {
+    return 'HMAC_SHA1';
+  }
 
-  build_signature_raw: (req_url, parsed_url, method, params, consumer_secret, token) ->
-    sig = [
-      method.toUpperCase()
-      utils.special_encode req_url
-      _clean_request_body params, parsed_url.query
-    ]
+  build_signature_raw(req_url, parsed_url, method, params, consumer_secret, token) {
+    const sig = [
+      method.toUpperCase(),
+      utils.special_encode(req_url),
+      _clean_request_body(params, parsed_url.query)
+    ];
 
-    @sign_string sig.join('&'), consumer_secret, token
+    return this.sign_string(sig.join('&'), consumer_secret, token);
+  }
 
-  host: (req) ->
-    if not @trustProxy
-      return req.headers.host
+  host(req) {
+    if (!this.trustProxy) {
+      return req.headers.host;
+    }
 
-    req.headers['x-forwarded-host'] or req.headers.host
+    return req.headers['x-forwarded-host'] || req.headers.host;
+  }
 
-  protocol: (req) ->
-    xprotocol = req.headers['x-forwarded-proto']
-    if @trustProxy and xprotocol
-      return xprotocol
+  protocol(req) {
+    const xprotocol = req.headers['x-forwarded-proto'];
+    if (this.trustProxy && xprotocol) {
+      return xprotocol;
+    }
 
-    if req.protocol
-      return req.protocol
+    if (req.protocol) {
+      return req.protocol;
+    }
 
-    if req.connection.encrypted then 'https' else 'http'
+    if (req.connection.encrypted) { return 'https'; } else { return 'http'; }
+  }
 
-  build_signature: (req, body, consumer_secret, token) ->
-    hapiRawReq = req.raw and req.raw.req
-    if hapiRawReq
-      req = hapiRawReq
+  build_signature(req, body, consumer_secret, token) {
+    const hapiRawReq = req.raw && req.raw.req;
+    if (hapiRawReq) {
+      req = hapiRawReq;
+    }
 
-    originalUrl = req.originalUrl or req.url
-    host = @host req
-    protocol = @protocol req
+    let originalUrl = req.originalUrl || req.url;
+    const host = this.host(req);
+    const protocol = this.protocol(req);
 
-    # Since canvas includes query parameters in the body we can omit the query string
-    if body.tool_consumer_info_product_family_code == 'canvas' or body.tool_consumer_info_product_family_code == 'schoology'
-      originalUrl = url.parse(originalUrl).pathname
+    // Since canvas includes query parameters in the body we can omit the query string
+    if ((body.tool_consumer_info_product_family_code === 'canvas') || (body.tool_consumer_info_product_family_code === 'schoology')) {
+      originalUrl = url.parse(originalUrl).pathname;
+    }
 
-    parsedUrl  = url.parse originalUrl, true
-    hitUrl     = protocol + '://' + host + parsedUrl.pathname
+    const parsedUrl  = url.parse(originalUrl, true);
+    const hitUrl     = protocol + '://' + host + parsedUrl.pathname;
 
-    @build_signature_raw hitUrl, parsedUrl, req.method, body, consumer_secret, token
+    return this.build_signature_raw(hitUrl, parsedUrl, req.method, body, consumer_secret, token);
+  }
 
-  sign_string: (str, key, token) ->
-    key = "#{key}&"
-    key += token if token
+  sign_string(str, key, token) {
+    key = `${key}&`;
+    if (token) { key += token; }
 
-    crypto.createHmac('sha1', key).update(str).digest('base64')
+    return crypto.createHmac('sha1', key).update(str).digest('base64');
+  }
+}
 
-exports = module.exports = HMAC_SHA1
+const exports = (module.exports = HMAC_SHA1);

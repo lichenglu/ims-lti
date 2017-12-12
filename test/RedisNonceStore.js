@@ -1,23 +1,32 @@
-redis             = require 'redis'
-should            = require 'should'
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+const redis             = require('redis');
+const should            = require('should');
 
-RedisNonceStore   = require '../lib/redis-nonce-store'
-shared            = require './shared'
+const RedisNonceStore   = require('../lib/redis-nonce-store');
+const shared            = require('./shared');
 
-describe 'RedisNonceStore', () ->
+describe('RedisNonceStore', function() {
 
-  redisClient = redis.createClient()
+  const redisClient = redis.createClient();
 
-  shared.shouldBehaveLikeNonce () =>
-    new RedisNonceStore redisClient
+  shared.shouldBehaveLikeNonce(() => {
+    return new RedisNonceStore(redisClient);
+  });
 
-  it 'should put the client on redis property (private)', () ->
-    store = new RedisNonceStore redisClient
+  it('should put the client on redis property (private)', function() {
+    const store = new RedisNonceStore(redisClient);
 
-    store.redis.should.equal redisClient
+    return store.redis.should.equal(redisClient);
+  });
 
-  it 'should ignore old consumer_key arg as first argument', () ->
-    store = new RedisNonceStore 'consumer_key', redisClient
+  return it('should ignore old consumer_key arg as first argument', function() {
+    const store = new RedisNonceStore('consumer_key', redisClient);
 
-    store.redis.should.equal redisClient
+    return store.redis.should.equal(redisClient);
+  });
+});
 

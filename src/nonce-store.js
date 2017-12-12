@@ -1,14 +1,26 @@
-class NonceStore
+class NonceStore {
 
-  isNonceStore: () -> true
+  constructor() {
+    this.isNew = this.isNew.bind(this);
+    this.setUsed = this.setUsed.bind(this);
+  }
 
-  isNew: ()=>
-    for i, arg of arguments
-      return arg new Error("NOT IMPLEMENTED"), false if typeof arg is 'function'
+  isNonceStore() { return true; }
 
-  setUsed: ()=>
-    for i, arg of arguments
-      return arg new Error("NOT IMPLEMENTED"), false if typeof arg is 'function'
+  isNew(){
+    for (let i in arguments) {
+      const arg = arguments[i];
+      if (typeof arg === 'function') { return arg(new Error("NOT IMPLEMENTED"), false); }
+    }
+  }
+
+  setUsed(){
+    for (let i in arguments) {
+      const arg = arguments[i];
+      if (typeof arg === 'function') { return arg(new Error("NOT IMPLEMENTED"), false); }
+    }
+  }
+}
 
 
-exports = module.exports = NonceStore
+const exports = (module.exports = NonceStore);
