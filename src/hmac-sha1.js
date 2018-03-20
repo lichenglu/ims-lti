@@ -61,7 +61,7 @@ function _encodeParam(key, val) {
 class HMAC_SHA1 {
   constructor(options) {
     this.trustProxy = (options && options.trustProxy) || false;
-    this.appURL = (options && options.appURL) || false;
+    this.appHost = (options && options.appHost) || false;
   }
 
   toString() {
@@ -90,13 +90,20 @@ class HMAC_SHA1 {
       return req.headers.host;
     }
 
-    if (!this.appURL && !req.headers['x-forwarded-host']) {
+    if (!this.appHost && !req.headers['x-forwarded-host']) {
       throw new Error(
         'trustProxy is enabled. So either you need a "x-forwarded-host" header or a specific app base url'
       );
     }
 
-    return this.appURL || req.headers['x-forwarded-host'] || req.headers.host;
+    // appHost should not contain protocol
+    if (this.appHost && /(http(s?))\:\/\//.test(this.appHost)) {
+      throw new Error(
+        'appHost should not contain the protocol string, instead, it should be the domain + path of your proxied app'
+      );
+    }
+
+    return this.appHost || req.headers['x-forwarded-host'] || req.headers.host;
   }
 
   protocol(req) {
