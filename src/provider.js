@@ -87,7 +87,10 @@ class Provider {
       return false;
     }
 
-    return this._valid_oauth(req, body, cb);
+    return this._valid_oauth(req, body, (err, isValid) => {
+      this.parse_request(req);
+      if (cb) cb(err, isValid);
+    });
   }
 
   /**
