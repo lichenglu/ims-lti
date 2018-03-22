@@ -90,9 +90,9 @@ class HMAC_SHA1 {
       return req.headers.host;
     }
 
-    if (!this.appHost && !req.headers['x-forwarded-host']) {
+    if (!this.appHost && !req.headers['x-script-uri']) {
       throw new Error(
-        'trustProxy is enabled. So either you need a "x-forwarded-host" header or a specific app base url'
+        'trustProxy is enabled. So either you need a "x-script-uri" header or a specific app base url'
       );
     }
 
@@ -103,7 +103,7 @@ class HMAC_SHA1 {
       );
     }
 
-    return this.appHost || req.headers['x-forwarded-host'] || req.headers.host;
+    return this.appHost || req.headers['x-script-uri'] || req.headers.host;
   }
 
   protocol(req) {
