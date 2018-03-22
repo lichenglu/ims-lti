@@ -7,13 +7,24 @@ This is a nodejs library used to help create Tool Providers for the
 
 ## Install
 ```
-npm install ims-lti --save
+npm i -S git+https://github.austin.utexas.edu/educ-oll/ims-lti.git
 ```
 
 To require the library into your project
-```coffeescript
-require 'ims-lti'
+```javascript
+const provider = require('ims-lti');
 ```
+
+## What's modified?
+The `Provider` constructor now still takes four arguments: `consumer_key, consumer_secret, optionsOrNonceStore, signature_method`. Only the third argument `optionsOrNonceStore` is changed, before it is expecting a custom nounceStore, but now it is expecting an option object or a nonceStore.
+
+The `Option` you can pass contains
+
+| Option  | Type  | Default | Description |
+|---|---|---|---|
+| nonceStore  | a nonce store... | the library's memory store | |
+| trustProxy |  `Boolean`. | `true` | If using reverse proxy, it is likely that you need to set it to true. For now, it is the common case in the OI2 office, so it is set to true by default |
+| appHost  | `String` | `null`. You can specify the appHost if for some reason you cannot get it in headers | |
 
 ## Supported LTI Versions
 
