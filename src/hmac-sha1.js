@@ -86,18 +86,21 @@ class HMAC_SHA1 {
   }
 
   requestUri(req) {
-    if (!this.trustProxy) {
-      let originalUrl = req.originalUrl || req.url;
-      // Since canvas includes query parameters in the body we can omit the query string
-      if (
-        body.tool_consumer_info_product_family_code === 'canvas' ||
-        body.tool_consumer_info_product_family_code === 'schoology'
-      ) {
-        originalUrl = url.parse(originalUrl).pathname;
-      }
-      const parsedUrl = url.parse(originalUrl, true);
+    let originalUrl = req.originalUrl || req.url;
+    // Since canvas includes query parameters in the body we can omit the query string
+    if (
+      body.tool_consumer_info_product_family_code === 'canvas' ||
+      body.tool_consumer_info_product_family_code === 'schoology'
+    ) {
+      originalUrl = url.parse(originalUrl).pathname;
+    }
+    const parsedUrl = url.parse(originalUrl, true);
 
-      return req.headers.host + parsedUrl.pathname;
+    if (!this.trustProxy) {
+      return {
+        hostWithPath: req.headers.host + parsedUrl.pathname;,
+        parsedUrl
+      }
     }
 
     if (!this.appHost && !req.headers['x-script-uri']) {
@@ -113,7 +116,10 @@ class HMAC_SHA1 {
       );
     }
 
-    return this.appHost || req.headers['x-script-uri'];
+    return {
+      hostWithPath: this.appHost || req.headers['x-script-uri'],
+      parsedUrl
+    }
   }
 
   protocol(req) {
@@ -137,7 +143,7 @@ class HMAC_SHA1 {
       req = hapiRawReq;
     }
 
-    const hostWithPath = this.requestUri(req, body);
+    const {hostWithPath, parsedUrl} = this.requestUri(req, body);
     const protocol = this.protocol(req);
 
     const hitUrl = protocol + '://' + hostWithPath;
