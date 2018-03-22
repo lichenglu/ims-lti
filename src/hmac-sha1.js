@@ -98,9 +98,9 @@ class HMAC_SHA1 {
 
     if (!this.trustProxy) {
       return {
-        hostWithPath: req.headers.host + parsedUrl.pathname;,
+        hostWithPath: req.headers.host + parsedUrl.pathname,
         parsedUrl
-      }
+      };
     }
 
     if (!this.appHost && !req.headers['x-script-uri']) {
@@ -119,7 +119,7 @@ class HMAC_SHA1 {
     return {
       hostWithPath: this.appHost || req.headers['x-script-uri'],
       parsedUrl
-    }
+    };
   }
 
   protocol(req) {
