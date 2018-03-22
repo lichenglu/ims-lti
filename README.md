@@ -20,11 +20,11 @@ The `Provider` constructor now still takes four arguments: `consumer_key, consum
 
 The `Option` you can pass contains
 
-| Option  | Type  | Default |
-|---|---|---|
-| nonceStore  | a nonce store... | the library's memory store |
-| trustProxy |  `Boolean`. If using reverse proxy, you are  | `false` |
-| appHost  | `String` | `null`. You can specify the appHost if for some reason you cannot get it in headers |
+| Option  | Type  | Default | Description |
+|---|---|---|---|
+| nonceStore  | a nonce store... | the library's memory store | |
+| trustProxy |  `Boolean`. | `true` | If using reverse proxy, it is likely that you need to set it to true. For now, it is the common case in the OI2 office, so it is set to true by default |
+| appHost  | `String` | `null`. You can specify the appHost if for some reason you cannot get it in headers | |
 
 ## Supported LTI Versions
 
