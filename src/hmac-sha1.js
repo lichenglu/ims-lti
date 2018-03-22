@@ -85,7 +85,7 @@ class HMAC_SHA1 {
     return this.sign_string(sig.join('&'), consumer_secret, token);
   }
 
-  requestUri(req) {
+  requestUri(req, body) {
     let originalUrl = req.originalUrl || req.url;
     // Since canvas includes query parameters in the body we can omit the query string
     if (
