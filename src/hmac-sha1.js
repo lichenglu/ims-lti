@@ -60,7 +60,16 @@ function _encodeParam(key, val) {
 
 class HMAC_SHA1 {
   constructor(options) {
-    this.trustProxy = (options && options.trustProxy) || false;
+    // Default to true if trustProxy is not set. Tricky boolean
+    if (
+      !options ||
+      options.trustProxy === undefined ||
+      options.trustProxy === null
+    ) {
+      this.trustProxy = true;
+    } else {
+      this.trustProxy = (options && options.trustProxy) || false;
+    }
     this.appHost = (options && options.appHost) || false;
   }
 
