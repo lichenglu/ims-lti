@@ -6,25 +6,28 @@ This is a nodejs library used to help create Tool Providers for the
 [IMS LTI standard](http://www.imsglobal.org/lti/index.html). Tool Consumer implmentation is left as an excersise to the reader :P
 
 ## Install
+
 ```
-npm i -S git+https://github.austin.utexas.edu/educ-oll/ims-lti.git
+npm i -S @oi2/ims-lti
 ```
 
 To require the library into your project
+
 ```javascript
 const provider = require('ims-lti');
 ```
 
 ## What's modified?
+
 The `Provider` constructor now still takes four arguments: `consumer_key, consumer_secret, optionsOrNonceStore, signature_method`. Only the third argument `optionsOrNonceStore` is changed, before it is expecting a custom nounceStore, but now it is expecting an option object or a nonceStore.
 
 The `Option` you can pass contains
 
-| Option  | Type  | Default | Description |
-|---|---|---|---|
-| nonceStore  | a nonce store... | the library's memory store | |
-| trustProxy |  `Boolean`. | `true` | If using reverse proxy, it is likely that you need to set it to true. For now, it is the common case in the OI2 office, so it is set to true by default |
-| appHost  | `String` | `null`. You can specify the appHost if for some reason you cannot get it in headers | |
+| Option     | Type             | Default                                                                             | Description                                                                                                                                                     |
+| ---------- | ---------------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| nonceStore | a nonce store... | the library's memory store                                                          |                                                                                                                                                                 |
+| trustProxy | `Boolean`.       | `true`                                                                              | If you are using reverse proxy, it is likely that you need to set it to true. For now, it is the common case in the OI2 office, so it is set to true by default |
+| appHost    | `String`         | `null`. You can specify the appHost if for some reason you cannot get it in headers |                                                                                                                                                                 |
 
 ## Supported LTI Versions
 
@@ -43,6 +46,7 @@ This library offers a few interfaces to use for managing the OAuth nonces to mak
 isn't used twice with the same timestamp. [Read the LTI documentation on OAuth](http://www.imsglobal.org/LTI/v1p1pd/ltiIMGv1p1pd.html#_Toc309649687). They will be covered below.
 
 ### Setting up a Tool Provider (TP)
+
 As a TP your app will receive a POST request with [LTI launch data](http://www.imsglobal.org/lti/v1p1pd/ltiIMGv1p1pd.html#_Toc309649684) that will be signed with OAuth using a key/secret that both the TP and Tool Consumer (TC) share. This is all covered in the [LTI security model](http://www.imsglobal.org/lti/v1p1pd/ltiIMGv1p1pd.html#_Toc309649685)
 
 Once you find the `oauth_consumer_secret` based on the `oauth_consumer_key` in the POST request, you can initialize a `Provider` object with them and a few other optional parameters:
@@ -82,7 +86,9 @@ Currently there is not an emplementation for posting back to the Tool Consumer, 
 `ims-lti` does not standardize the way in which the OAuth nonce/timestamp is to be stored. Since it is a crutial part of OAuth security, this library implements an Interface to allow the user to implement their own nonce-stores.
 
 #### Nonce Interface
+
 All custom Nonce stores should extend the NonceStore class and implment `isNew` and `setUsed`
+
 ```coffeescript
 class NonceStore
   isNew:   (nonce,timestamp,callback)=>
@@ -93,9 +99,11 @@ class NonceStore
 Two nonce stores have been implemented for convinience.
 
 #### MemoryNonceStore
+
 The default nonce store (if none is specified) is the Memory Nonce Store. This store simply keeps an array of nocne/timestamp keys. Timestamps must be valid within a 5 minute grace period.
 
 #### RedisNonceStore
+
 A superior nonce store is the RedisNonceStore. This store requires a secondary input into the constructor, a redis-client. The redis client is used to store the nonce keys and set them to expire within a set amount of time (default 5 minutes). A RedisNonceStore is initialized like:
 
 ```coffeescript
@@ -170,7 +178,9 @@ provider.valid_request req, (err, is_valid) ->
 ```
 
 ## Running Tests
+
 To run the test suite first installing the dependencies:
+
 ```
 npm install
 make test
